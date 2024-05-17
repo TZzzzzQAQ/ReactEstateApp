@@ -2,9 +2,14 @@ import {useState} from 'react';
 import Header from "@/components/Header.jsx";
 import {Link, useNavigate} from "react-router-dom";
 import {useSignIn} from "@/hooks/useSignIn.jsx";
+import {useDispatch} from "react-redux";
+import {setUser} from "@/store/feature/userSlice.jsx";
 
 const SignUp = () => {
     const {isError, isLoading, errorMessage, isSuccess, fetchSignIn} = useSignIn();
+    const dispatch = useDispatch();
+
+
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
@@ -20,7 +25,8 @@ const SignUp = () => {
     }
     const handlerSubmit = async (e) => {
         e.preventDefault();
-        fetchSignIn(formData).then(() => {
+        fetchSignIn(formData).then((response) => {
+            dispatch(setUser(response))
             navigate("/", {replace: true})
         })
     }
