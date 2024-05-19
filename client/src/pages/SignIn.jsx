@@ -4,6 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {useSignIn} from "@/hooks/useSignIn.jsx";
 import {useDispatch} from "react-redux";
 import {setUser} from "@/store/feature/userSlice.jsx";
+import GoogleAuth from "@/components/GoogleAuth.jsx";
 
 const SignUp = () => {
     const {isError, isLoading, errorMessage, isSuccess, fetchSignIn} = useSignIn();
@@ -48,12 +49,12 @@ const SignUp = () => {
                         {isLoading ? "Signing Up......" : "Sign Up"}
                     </button>
                 </form>
+                <GoogleAuth/>
                 <div className={'font-extrabold'}>
                     Do not have an account? <Link className={'text-blue-400 font-extrabold'} to={'/sign-up'}>Sign
                     up</Link>
                 </div>
                 {isError && <p className={'text-red-500 font-extrabold'}>{errorMessage}</p>}
-                {isSuccess && <p className={'font-extrabold'}>Sign up successfully. </p>}
             </div>
         </div>
     );

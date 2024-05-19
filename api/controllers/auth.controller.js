@@ -1,5 +1,6 @@
-import {signInService, signUpService} from "../service/signUp.service.js";
+import {signInService, signInWithGoogle, signUpService} from "../service/signUp.service.js";
 import {errorHandler} from "../utils/error.js";
+import {findUserByEmail} from "../DAO/auth.dao.js";
 
 
 export const authSignUp = async (req, res, next) => {
@@ -17,6 +18,15 @@ export const authSignIn = async (req, res, next) => {
         const {token, restUser} = await signInService(req.body);
         res.status(200).cookie('access_token', token).json(restUser);
     } catch (e) {
-        return next(errorHandler(404, 'Wrong credentials'));
+        return next(errorHandler(e.statusCode, 'Wrong credentials'));
+    }
+}
+
+export const authGoogleSignIn = async (req, res, next) => {
+    try {
+        const {token, restUser} = await signInWithGoogle(req.body);
+        res.status(200).cookie('access_token', token).json(restUser);
+    } catch (e) {
+        return next(errorHandler(e.statusCode, e.message));
     }
 }

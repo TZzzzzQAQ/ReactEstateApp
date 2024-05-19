@@ -15,3 +15,11 @@ export function signInAPI(data) {
         data
     })
 }
+
+export function signInGoogleAPI(data){
+    return requestSign({
+        method: "POST",
+        url: "/google",
+        data
+    })
+}

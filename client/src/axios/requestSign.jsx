@@ -6,7 +6,10 @@ const requestSign = axios.create({
 });
 
 requestSign.interceptors.request.use(
-    (config) => config,
+    (config) => {
+        config.headers.contentType = 'application/json; charset=UTF-8';
+        return config;
+    },
     (error) => Promise.reject(error)
 );
 

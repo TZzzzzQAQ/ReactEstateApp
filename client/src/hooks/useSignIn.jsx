@@ -11,6 +11,7 @@ export function useSignIn() {
         setIsLoading(true);
         setIsError(false);
         setIsSuccess(false);
+        setErrorMessage('');
         try {
             const response = await signInAPI(data);
             setIsSuccess(true);
