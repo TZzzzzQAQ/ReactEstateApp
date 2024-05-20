@@ -10,7 +10,6 @@ const SignUp = () => {
     const {isError, isLoading, errorMessage, isSuccess, fetchSignIn} = useSignIn();
     const dispatch = useDispatch();
 
-
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
@@ -26,10 +25,10 @@ const SignUp = () => {
     }
     const handlerSubmit = async (e) => {
         e.preventDefault();
-        fetchSignIn(formData).then((response) => {
-            dispatch(setUser(response))
-            navigate("/", {replace: true})
-        })
+        const response = fetchSignIn(formData);
+        console.log(response)
+        dispatch(setUser(response))
+        navigate("/", {replace: true})
     }
     return (
         <div>

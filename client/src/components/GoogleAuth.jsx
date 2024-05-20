@@ -1,13 +1,17 @@
 import {useSignInGoogle} from "@/hooks/useSignInGoogle.jsx";
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setUser} from "@/store/feature/userSlice.jsx";
 
 
 const GoogleAuth = () => {
     const {isError, isLoading, errorMessage, fetchGoogleUsers} = useSignInGoogle();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const loginInWithGoogle = async () => {
         try {
             const response = await fetchGoogleUsers();
+            dispatch(setUser(response));
             navigate('/', {replace: true});
         } catch (error) {
             console.log(error);
