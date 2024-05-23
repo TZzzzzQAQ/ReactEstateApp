@@ -5,6 +5,7 @@ import SignIn from "@/pages/SignIn.jsx";
 import SignUp from "@/pages/SignUp.jsx";
 import Profile from "@/pages/Profile.jsx";
 import About from "@/pages/About.jsx";
+import AuthRoute from "@/components/AuthRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/profile',
-        element: <Profile/>
+        element: <AuthRoute><Profile/></AuthRoute>
     }
 ], {
     basename: '/estate'

@@ -1,6 +1,6 @@
 import {signInService, signInWithGoogle, signUpService} from "../service/signUp.service.js";
 import {errorHandler} from "../utils/error.js";
-import {findUserByEmail} from "../DAO/auth.dao.js";
+import {findUserByEmail} from "../Dao/auth.dao.js";
 
 
 export const authSignUp = async (req, res, next) => {

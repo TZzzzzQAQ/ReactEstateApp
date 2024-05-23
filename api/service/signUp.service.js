@@ -1,4 +1,4 @@
-import {createUser, findUserByEmail} from "../DAO/auth.dao.js";
+import {createUser, findUserByEmail} from "../Dao/auth.dao.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
 import User from "../models/user.model.js";
