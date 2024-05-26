@@ -10,7 +10,6 @@ const SignUp = () => {
     const {isError, isLoading, errorMessage, isSuccess, fetchSignIn} = useSignIn();
     const dispatch = useDispatch();
 
-
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
@@ -26,17 +25,17 @@ const SignUp = () => {
     }
     const handlerSubmit = async (e) => {
         e.preventDefault();
-        fetchSignIn(formData).then((response) => {
-            dispatch(setUser(response))
-            navigate("/", {replace: true})
-        })
+        const response = fetchSignIn(formData);
+        console.log(response)
+        dispatch(setUser(response))
+        navigate("/", {replace: true})
     }
     return (
         <div>
             <Header/>
-            <div className={'flex flex-col items-center justify-center mt-8 max-w-lg mx-auto'} onSubmit={handlerSubmit}>
+            <div className={'flex flex-col items-center justify-center mt-8 max-w-lg mx-auto'}>
                 <h1 className={'text-3xl font-extrabold'}>Sign In</h1>
-                <form className={'flex flex-col items-center justify-center mt-8 gap-4'}>
+                <form className={'flex flex-col items-center justify-center mt-8 gap-4'} onSubmit={handlerSubmit}>
                     <input onChange={handlerChange} type={'email'} placeholder={'email'}
                            className={'rounded-lg p-2 max-w-lg w-96'}
                            id={'email'}/>

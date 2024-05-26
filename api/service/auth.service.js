@@ -1,11 +1,13 @@
-import {createUser, findUserByEmail} from "../DAO/auth.dao.js";
+import {createUser, findUserByEmail} from "../Dao/user.dao.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
 import User from "../models/user.model.js";
+import dotenv from "dotenv";
 
-const SALT = 12
+dotenv.config();
+const SALT = parseInt(process.env.SALT);
 
-export const signUpService = async (userData) => {
+export const authService = async (userData) => {
     const {password, tempPassword, ...rest} = userData;
 
     if (password !== tempPassword) {
