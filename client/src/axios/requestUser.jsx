@@ -8,6 +8,7 @@ const requestUser = axios.create({
 
 requestUser.interceptors.request.use((config) => {
     config.headers.Authorization = 'Bearer ' + getCookie();
+    config.headers.contentType = 'application/json; charset=UTF-8';
     return config;
 }, (error) => Promise.reject(error));
 

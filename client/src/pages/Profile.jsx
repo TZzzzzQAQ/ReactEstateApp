@@ -1,14 +1,16 @@
 import Header from "@/components/Header.jsx";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage'
 import {firebaseApp} from "@/../fireabase.js";
 import {useUserUpdate} from "@/hooks/useUserUpdate.jsx";
+import {setUser} from "@/store/feature/userSlice.jsx";
 
 const Profile = () => {
-    const {isError, isSuccess, isLoading, fetchUserUpdate} = useUserUpdate()
+    const {isError, isSuccess, isLoading, errorMessage, fetchUserUpdate} = useUserUpdate()
 
     const {user} = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     const [imgFile, setImgFile] = useState(undefined);
     const [imagePercent, setImagePercent] = useState(0);
@@ -16,6 +18,7 @@ const Profile = () => {
     const [formData, setFormData] = useState({
         ...user
     })
+
 
     const fileRef = useRef(null);
 
@@ -68,7 +71,10 @@ const Profile = () => {
     const submitHandler = async (e) => {
         console.log(formData);
         e.preventDefault();
-        await fetchUserUpdate(user._id, formData);
+        const response = await fetchUserUpdate(user._id, formData);
+        if (isSuccess) {
+            dispatch(setUser(response));
+        }
     }
 
     return (
@@ -94,16 +100,22 @@ const Profile = () => {
                        onChange={inputChangeHandler}
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'email'}/>
-                <input type={'password'} placeholder={'password'}
+                <input type={'password'} placeholder={'OldPassword'}
                        onChange={inputChangeHandler}
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'password'}/>
+                <input type={'password'} placeholder={'NewPassword'}
+                       onChange={inputChangeHandler}
+                       className={'rounded-lg p-2 max-w-lg w-96'}
+                       id={'newPassword'}/>
                 <button
                     type={"submit"}
+                    disabled={isLoading}
                     className={'text-white rounded-lg p-2 max-w-lg w-96 uppercase bg-cyan-700 hover:bg-cyan-900 font-extrabold'}>
                     Update
                 </button>
             </form>
+            {isError && <div>{errorMessage}</div>}
         </div>
     );
 };
