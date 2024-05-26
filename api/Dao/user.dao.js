@@ -5,6 +5,14 @@ export const createUser = async (userData) => {
     return await user.save();
 };
 
+export const updateUser = async (id, userData) => {
+    return User.findOneAndUpdate(
+        {_id: id},
+        {$set: userData},
+        {new: true, runValidators: true}
+    );
+}
+
 export const findUserByEmail = async (email) => {
-    return await User.findOne({ email });
+    return User.findOne({email});
 };

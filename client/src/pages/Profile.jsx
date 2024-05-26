@@ -1,18 +1,23 @@
 import Header from "@/components/Header.jsx";
-import AuthRoute from "@/components/AuthRoute.jsx";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage'
 import {firebaseApp} from "@/../fireabase.js";
+import {useUserUpdate} from "@/hooks/useUserUpdate.jsx";
 
 const Profile = () => {
+    const {isError, isSuccess, isLoading, fetchUserUpdate} = useUserUpdate()
+
     const {user} = useSelector((state) => state.user);
+
     const [imgFile, setImgFile] = useState(undefined);
     const [imagePercent, setImagePercent] = useState(0);
-    const [error, setError] = useState()
-    const [formData, setFormData] = useState({})
+    const [setError] = useState()
+    const [formData, setFormData] = useState({
+        ...user
+    })
+
     const fileRef = useRef(null);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if (imgFile?.name) {
@@ -60,9 +65,12 @@ const Profile = () => {
         })
     }
 
-    const submitHandler = () => {
+    const submitHandler = async (e) => {
         console.log(formData);
+        e.preventDefault();
+        await fetchUserUpdate(user._id, formData);
     }
+
     return (
         <div>
             <Header/>
@@ -77,10 +85,12 @@ const Profile = () => {
                 <div hidden={imagePercent === 0}>{imagePercent}%</div>
                 <div hidden={imagePercent !== 100}>Successfully upload.</div>
                 <input type={'name'} placeholder={'name'}
+                       value={formData.name}
                        onChange={inputChangeHandler}
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'name'}/>
                 <input type={'email'} placeholder={'email'}
+                       value={formData.email}
                        onChange={inputChangeHandler}
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'email'}/>
@@ -89,6 +99,7 @@ const Profile = () => {
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'password'}/>
                 <button
+                    type={"submit"}
                     className={'text-white rounded-lg p-2 max-w-lg w-96 uppercase bg-cyan-700 hover:bg-cyan-900 font-extrabold'}>
                     Update
                 </button>

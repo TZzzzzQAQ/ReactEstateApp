@@ -1,11 +1,11 @@
-import {signInService, signInWithGoogle, signUpService} from "../service/signUp.service.js";
+import {signInService, signInWithGoogle, authService} from "../service/auth.service.js";
 import {errorHandler} from "../utils/error.js";
-import {findUserByEmail} from "../Dao/auth.dao.js";
+import {findUserByEmail} from "../Dao/user.dao.js";
 
 
 export const authSignUp = async (req, res, next) => {
     try {
-        const newUser = await signUpService(req.body);
+        const newUser = await authService(req.body);
         const {password: password, ...restUser} = newUser._doc;
         res.status(201).json({message: 'User saved successfully', user: restUser});
     } catch (error) {
