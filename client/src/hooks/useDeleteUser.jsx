@@ -1,20 +1,20 @@
 import {useState} from "react";
-import {userUpdateAPI} from "@/api/userAPI.jsx";
+import {userDeleteAPI} from "@/api/userAPI.jsx";
 
-export function useUserUpdate() {
+export function useDeleteUser() {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const fetchUserUpdate = async (id, data) => {
+    const fetchDeleteUser = async (id, data) => {
         setIsLoading(true);
         setIsError(false);
         setIsSuccess(false);
         setErrorMessage('');
 
         try {
-            const response = await userUpdateAPI(id, data);
+            const response = await userDeleteAPI(id, data);
             setIsSuccess(true);
             return response;
         } catch (e) {
@@ -25,5 +25,5 @@ export function useUserUpdate() {
             setIsLoading(false);
         }
     }
-    return {errorMessage, isLoading, isError, isSuccess, fetchUserUpdate};
+    return {errorMessage, isLoading, isError, isSuccess, fetchDeleteUser};
 }

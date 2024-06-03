@@ -1,4 +1,4 @@
-import {findUserByEmail, updateUser} from "../Dao/user.dao.js";
+import {deleteUserByID, findUserByEmail, updateUser} from "../Dao/user.dao.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
@@ -17,7 +17,6 @@ export const updateUserService = async (userData) => {
     }
     userData.password = await bcrypt.hash(userData.newPassword, SALT);
     delete userData.newPassword;
-    console.log(userData);
     const response = await updateUser(userData._id, userData);
     const {password: tempPassword, ...restUser} = response._doc;
     if (restUser) {
@@ -26,4 +25,8 @@ export const updateUserService = async (userData) => {
     } else {
         throw new Error("User does not exist");
     }
+}
+
+export const deleteUserService = async (userData) => {
+    return await deleteUserByID(userData.id);
 }

@@ -7,3 +7,11 @@ export function userUpdateAPI(id, data) {
         data
     })
 }
+
+export function userDeleteAPI(id, data) {
+    return requestUser({
+        method: 'DELETE',
+        url: `/delete/${id}`,
+        data
+    })
+}

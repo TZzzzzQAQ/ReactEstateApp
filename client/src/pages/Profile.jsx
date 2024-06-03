@@ -5,10 +5,20 @@ import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/st
 import {firebaseApp} from "@/../fireabase.js";
 import {useUserUpdate} from "@/hooks/useUserUpdate.jsx";
 import {setUser} from "@/store/feature/userSlice.jsx";
+import {useDeleteUser} from "@/hooks/useDeleteUser.jsx";
+import {deleteCookie} from "@/utils/tokenUtils.jsx";
+import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
     const {isError, isSuccess, isLoading, errorMessage, fetchUserUpdate} = useUserUpdate()
-
+    const navigate = useNavigate();
+    const {
+        isError: isDeleteError,
+        isLoading: isDeleteLoading,
+        isSuccess: isDeleteSuccess,
+        errorMessage: deleteErrorMessage,
+        fetchDeleteUser
+    } = useDeleteUser()
     const {user} = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
@@ -69,7 +79,6 @@ const Profile = () => {
     }
 
     const submitHandler = async (e) => {
-        console.log(formData);
         e.preventDefault();
         const response = await fetchUserUpdate(user._id, formData);
         if (isSuccess) {
@@ -77,6 +86,22 @@ const Profile = () => {
         }
     }
 
+    const deleteHandler = async (e) => {
+        e.preventDefault();
+        const response = await fetchDeleteUser(user._id, formData);
+        if (response === null) {
+            dispatch(setUser(response));
+            deleteCookie('access_token');
+            navigate("/sign-in", {replace: true});
+        }
+    }
+
+    const logoutHandler = async (e) => {
+        e.preventDefault();
+        dispatch(setUser(null));
+        deleteCookie('access_token');
+        navigate("/", {replace: true})
+    }
     return (
         <div>
             <Header/>
@@ -86,17 +111,17 @@ const Profile = () => {
                 </h1>
                 <input type={"file"} ref={fileRef} hidden={true} accept={'image/*'}
                        onChange={uploadFileChange}/>
-                <img src={user.avatar} alt={user.displayName} className={'rounded-full cursor-pointer'}
+                <img src={user?.avatar} alt={user?.displayName} className={'rounded-full cursor-pointer'}
                      onClick={() => fileRef.current.click()}/>
                 <div hidden={imagePercent === 0}>{imagePercent}%</div>
                 <div hidden={imagePercent !== 100}>Successfully upload.</div>
                 <input type={'name'} placeholder={'name'}
-                       value={formData.name}
+                       value={formData?.name}
                        onChange={inputChangeHandler}
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'name'}/>
                 <input type={'email'} placeholder={'email'}
-                       value={formData.email}
+                       value={formData?.email}
                        onChange={inputChangeHandler}
                        className={'rounded-lg p-2 max-w-lg w-96'}
                        id={'email'}/>
@@ -114,8 +139,22 @@ const Profile = () => {
                     className={'text-white rounded-lg p-2 max-w-lg w-96 uppercase bg-cyan-700 hover:bg-cyan-900 font-extrabold'}>
                     Update
                 </button>
+                <button
+                    type={"button"}
+                    onClick={logoutHandler}
+                    className={"font-extrabold text-white rounded-lg p-2 max-w-lg w-96 uppercase bg-cyan-700 hover:bg-cyan-900"}>
+                    Logout
+                </button>
+                <button
+                    type={"button"}
+                    disabled={isDeleteLoading}
+                    onClick={deleteHandler}
+                    className={"font-extrabold text-white rounded-lg p-2 max-w-lg w-96 uppercase bg-red-700 hover:bg-red-900"}>
+                    Delete Account
+                </button>
             </form>
             {isError && <div>{errorMessage}</div>}
+            {isDeleteError && <div>{deleteErrorMessage}</div>}
         </div>
     );
 };

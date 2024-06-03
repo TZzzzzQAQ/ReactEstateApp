@@ -6,6 +6,7 @@ import SignUp from "@/pages/SignUp.jsx";
 import Profile from "@/pages/Profile.jsx";
 import About from "@/pages/About.jsx";
 import AuthRoute from "@/components/AuthRoute.jsx";
+import {CreateListing} from "@/pages/CreateListing.jsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     {
         path: '/profile',
         element: <AuthRoute><Profile/></AuthRoute>
+    },
+    {
+        path: '/create-listing',
+        element: <AuthRoute><CreateListing/></AuthRoute>
     }
 ], {
     basename: '/estate'
